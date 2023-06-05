@@ -75,17 +75,41 @@ function orderAlphabetically(moviesArray) {
 function turnHoursToMinutes(moviesArray) {
   const copy = JSON.parse(JSON.stringify(moviesArray));
   return copy.map((movie) => {
-    const hours = movie.duration.trim().slice(0, movie.duration.indexOf("h"));
+    const hours = movie.duration.slice(0, movie.duration.indexOf("h"));
 
-    const minutes = movie.duration
-      .trim()
-      .slice(movie.duration.indexOf("h") + 1, movie.duration.indexOf("m"));
+    const minutes = movie.duration.slice(
+      movie.duration.indexOf("h") + 1,
+      movie.duration.indexOf("m")
+    );
 
     const result = Number(hours) * 60 + Number(minutes);
-    console.log(result);
+
     return { ...movie, duration: result };
   });
 }
 
 // BONUS - Iteration 8: Best yearly score average - Best yearly score average
-function bestYearAvg(moviesArray) {}
+function bestYearAvg(moviesArray) {
+  if (moviesArray.length === 0) {
+    return null;
+  }
+  const masterObject = {};
+  moviesArray.forEach((movie) => {
+    if (!masterObject[movie.year]) {
+      masterObject[movie.year] = [movie];
+    } else {
+      masterObject[movie.year].push(movie);
+    }
+  });
+
+  let highestAvrg = 0;
+  let actualYear;
+
+  for (const key in masterObject) {
+    if (scoresAverage(masterObject[key]) > highestAvrg) {
+      highestAvrg = scoresAverage(masterObject[key]);
+      actualYear = key;
+    }
+  }
+  return `The best year was ${actualYear} with an average score of ${highestAvrg}`;
+}
